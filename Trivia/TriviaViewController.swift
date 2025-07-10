@@ -26,7 +26,20 @@ class TriviaViewController: UIViewController {
     super.viewDidLoad()
     addGradient()
     questionContainerView.layer.cornerRadius = 8.0
-    // TODO: FETCH TRIVIA QUESTIONS HERE
+      // TODO: FETCH TRIVIA QUESTIONS HERE
+
+
+      TriviaQuestionService.fetchQuestions(amount: 5) { [weak self] questions in
+          DispatchQueue.main.async {
+              self?.questions = questions
+              self?.currQuestionIndex = 0
+              self?.numCorrectQuestions = 0
+              self?.updateQuestion(withQuestionIndex: 0)
+          }
+      }
+   
+      
+      
   }
   
   private func updateQuestion(withQuestionIndex questionIndex: Int) {
@@ -45,10 +58,15 @@ class TriviaViewController: UIViewController {
     if answers.count > 2 {
       answerButton2.setTitle(answers[2], for: .normal)
       answerButton2.isHidden = false
+    } else{
+        answerButton2?.isHidden = true
     }
     if answers.count > 3 {
       answerButton3.setTitle(answers[3], for: .normal)
       answerButton3.isHidden = false
+    } else {
+        answerButton3?.isHidden = true
+
     }
   }
   
