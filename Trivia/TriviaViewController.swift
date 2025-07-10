@@ -90,11 +90,25 @@ class TriviaViewController: UIViewController {
     let alertController = UIAlertController(title: "Game over!",
                                             message: "Final score: \(numCorrectQuestions)/\(questions.count)",
                                             preferredStyle: .alert)
-    let resetAction = UIAlertAction(title: "Restart", style: .default) { [unowned self] _ in
-      currQuestionIndex = 0
-      numCorrectQuestions = 0
-      updateQuestion(withQuestionIndex: currQuestionIndex)
-    }
+//    let resetAction = UIAlertAction(title: "Restart", style: .default) { [unowned self] _ in
+//      currQuestionIndex = 0
+//      numCorrectQuestions = 0
+//      updateQuestion(withQuestionIndex: currQuestionIndex)
+//    }
+      
+      let resetAction = UIAlertAction(title: "Restart", style: .default) { [weak self] _ in
+         
+          // fetch new questions when restarting
+          TriviaQuestionService.fetchQuestions(amount: 5) { [weak self] questions in
+              DispatchQueue.main.async {
+                  self?.questions = questions
+                  self?.currQuestionIndex = 0
+                  self?.numCorrectQuestions = 0
+                  self?.updateQuestion(withQuestionIndex: 0)
+              }
+          }
+
+       }
     alertController.addAction(resetAction)
     present(alertController, animated: true, completion: nil)
   }
